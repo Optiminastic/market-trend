@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Lora, Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
@@ -44,6 +45,7 @@ export default function RootLayout({
         </header>
         <div className="flex flex-1 flex-col">{children}</div>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
