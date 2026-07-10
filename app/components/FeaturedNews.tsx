@@ -21,11 +21,11 @@ export default function FeaturedNews() {
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-[1fr_1.25fr]">
         <div className="flex flex-col">
           <CategoryLabel href={featured.href}>{featured.category}</CategoryLabel>
-          <h3 className="mt-2 font-display text-[26px] font-bold leading-tight text-foreground sm:text-[30px]">
+          <h1 className="mt-2 font-display text-[26px] font-bold leading-tight text-foreground sm:text-[30px]">
             <Link href={featured.href} className="hover:text-accent">
               {featured.title}
             </Link>
-          </h3>
+          </h1>
           <div className="mt-3 flex items-center gap-4 text-xs text-muted">
             <span>{featured.date}</span>
             <span className="flex items-center gap-1">

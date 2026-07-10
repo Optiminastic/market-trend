@@ -95,9 +95,29 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     },
   };
 
+  // Demote any <h1> in the post body to <h2> so the page title stays the only <h1>.
+  const contentHtml = post.content_html.replace(/<(\/?)h1(\b[^>]*)>/gi, "<$1h2$2>");
+
+  const faqJsonLd =
+    post.faq.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: post.faq.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
+
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12">
       <JsonLd data={articleJsonLd} />
+      {faqJsonLd ? <JsonLd data={faqJsonLd} /> : null}
       <Link href="/" className="text-sm text-muted transition-colors hover:text-foreground">
         ← Home
       </Link>
@@ -124,8 +144,27 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       ) : null}
       <div
         className="mt-8 font-serif text-lg leading-relaxed text-foreground [&_a]:text-[#1d6fa5] [&_a]:underline [&_h2]:font-display [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_li]:ml-5 [&_li]:list-disc [&_p]:mt-4 [&_ul]:mt-4"
-        dangerouslySetInnerHTML={{ __html: post.content_html }}
+        dangerouslySetInnerHTML={{ __html: contentHtml }}
       />
+      {post.faq.length > 0 ? (
+        <section className="mt-12 border-t border-border pt-8">
+          <h2 className="font-display text-3xl font-bold text-foreground">
+            Frequently Asked Questions
+          </h2>
+          <dl className="mt-6">
+            {post.faq.map((item, i) => (
+              <div key={i} className="border-b border-border py-6 first:pt-0 last:border-b-0">
+                <dt className="font-display text-xl font-semibold text-foreground">
+                  {item.question}
+                </dt>
+                <dd className="mt-3 font-serif text-lg leading-relaxed text-muted">
+                  {item.answer}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ) : null}
     </main>
   );
 }
